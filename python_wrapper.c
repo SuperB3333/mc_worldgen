@@ -122,20 +122,63 @@ Generator_gen_biomes(GeneratorObject *self, PyObject *args, PyObject *kwds)
     return list;
 }
 
+PyDoc_STRVAR(apply_seed_doc,
+"apply_seed(dim, seed)\n"
+"--\n\n"
+"Apply a world seed and dimension to the generator.\n\n"
+"Args:\n"
+"    dim (int): The dimension (Dimension.OVERWORLD, Dimension.NETHER, Dimension.END).\n"
+"    seed (int): The 64-bit integer world seed.");
+
+PyDoc_STRVAR(get_biome_at_doc,
+"get_biome_at(scale, x, y, z)\n"
+"--\n\n"
+"Get the biome ID at a specific coordinate and scale.\n\n"
+"Args:\n"
+"    scale (int): The horizontal scale factor (1, 4, 16, 64, or 256).\n"
+"    x (int): The X coordinate.\n"
+"    y (int): The Y coordinate.\n"
+"    z (int): The Z coordinate.\n\n"
+"Returns:\n"
+"    int: The Biome ID.");
+
+PyDoc_STRVAR(gen_biomes_doc,
+"gen_biomes(scale, x, z, sx, sz, y=0, sy=1)\n"
+"--\n\n"
+"Generate biomes for a given range.\n\n"
+"Args:\n"
+"    scale (int): The horizontal scale factor (1, 4, 16, 64, or 256).\n"
+"    x (int): The starting X coordinate.\n"
+"    z (int): The starting Z coordinate.\n"
+"    sx (int): The horizontal size in X direction.\n"
+"    sz (int): The horizontal size in Z direction.\n"
+"    y (int, optional): The starting Y coordinate. Defaults to 0.\n"
+"    sy (int, optional): The vertical size. Defaults to 1.\n\n"
+"Returns:\n"
+"    list[int]: A flat list of biome IDs.");
+
 static PyMethodDef Generator_methods[] = {
     {"apply_seed", (PyCFunction) Generator_apply_seed, METH_VARARGS | METH_KEYWORDS,
-     "Apply a seed to the generator"},
+     apply_seed_doc},
     {"get_biome_at", (PyCFunction) Generator_get_biome_at, METH_VARARGS | METH_KEYWORDS,
-     "Get biome at specific coordinates"},
+     get_biome_at_doc},
     {"gen_biomes", (PyCFunction) Generator_gen_biomes, METH_VARARGS | METH_KEYWORDS,
-     "Generate biomes for a range"},
+     gen_biomes_doc},
     {NULL}  /* Sentinel */
 };
+
+PyDoc_STRVAR(generator_doc,
+"Generator(mc=Version.MC_NEWEST, flags=0)\n"
+"--\n\n"
+"Minecraft World Generator object.\n\n"
+"Args:\n"
+"    mc (int): Minecraft version (use Version constants).\n"
+"    flags (int): Generator flags (use Flag constants).");
 
 static PyTypeObject GeneratorType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "mc_worldgen.Generator",
-    .tp_doc = "Minecraft World Generator",
+    .tp_doc = generator_doc,
     .tp_basicsize = sizeof(GeneratorObject),
     .tp_itemsize = 0,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
@@ -147,13 +190,17 @@ static PyTypeObject GeneratorType = {
 
 static PyModuleDef mc_worldgenmodule = {
     PyModuleDef_HEAD_INIT,
-    .m_name = "mc_worldgen",
-    .m_doc = "Python wrapper for cubiomes.",
+    .m_name = "mc_worldgen._mc_worldgen",
+    .m_doc = "Python wrapper for cubiomes Minecraft world generation library.",
     .m_size = -1,
 };
 
 static PyObject* create_enum_class(const char* name, const char* doc) {
     PyObject* dict = PyDict_New();
+    PyObject* doc_str = PyUnicode_FromString(doc);
+    PyDict_SetItemString(dict, "__doc__", doc_str);
+    Py_DECREF(doc_str);
+
     PyObject* metaclass = (PyObject*)&PyType_Type;
     PyObject* bases = PyTuple_Pack(1, &PyBaseObject_Type);
     PyObject* args = Py_BuildValue("sOO", name, bases, dict);
@@ -174,7 +221,7 @@ static PyObject* create_enum_class(const char* name, const char* doc) {
     } while(0)
 
 PyMODINIT_FUNC
-PyInit_mc_worldgen(void)
+PyInit__mc_worldgen(void)
 {
     PyObject *m;
     if (PyType_Ready(&GeneratorType) < 0)

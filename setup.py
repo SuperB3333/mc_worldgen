@@ -1,7 +1,7 @@
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 
 ext = Extension(
-    "mc_worldgen",
+    "mc_worldgen._mc_worldgen",
     sources=[
         "python_wrapper.c",
         "biomenoise.c",
@@ -19,5 +19,10 @@ ext = Extension(
 setup(
     name="mc_worldgen",
     version="0.1.0",
+    packages=find_packages(),
     ext_modules=[ext],
+    package_data={
+        "mc_worldgen": ["*.pyi", "py.typed"],
+    },
+    zip_safe=False,
 )
