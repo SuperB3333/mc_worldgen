@@ -3,7 +3,6 @@
 #include "generator.h"
 #include "biomes.h"
 #include "util.h"
-#include "structmember.h"
 
 typedef struct {
     PyObject_HEAD
