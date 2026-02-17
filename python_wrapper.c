@@ -158,11 +158,11 @@ PyDoc_STRVAR(gen_biomes_doc,
 "    list[int]: A flat list of biome IDs.");
 
 static PyMethodDef Generator_methods[] = {
-    {"apply_seed", (PyCFunction) Generator_apply_seed, METH_VARARGS | METH_KEYWORDS,
+    {"apply_seed", (PyCFunction)(void(*)(void)) Generator_apply_seed, METH_VARARGS | METH_KEYWORDS,
      apply_seed_doc},
-    {"get_biome_at", (PyCFunction) Generator_get_biome_at, METH_VARARGS | METH_KEYWORDS,
+    {"get_biome_at", (PyCFunction)(void(*)(void)) Generator_get_biome_at, METH_VARARGS | METH_KEYWORDS,
      get_biome_at_doc},
-    {"gen_biomes", (PyCFunction) Generator_gen_biomes, METH_VARARGS | METH_KEYWORDS,
+    {"gen_biomes", (PyCFunction)(void(*)(void)) Generator_gen_biomes, METH_VARARGS | METH_KEYWORDS,
      gen_biomes_doc},
     {NULL}  /* Sentinel */
 };
