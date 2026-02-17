@@ -1,8 +1,9 @@
 """Type stubs for mc_worldgen"""
 
 from typing import List, Optional
+from enum import IntEnum
 
-class Version:
+class Version(IntEnum):
     """Minecraft versions"""
     MC_B1_7: int = ...
     MC_B1_8: int = ...
@@ -33,19 +34,19 @@ class Version:
     MC_1_21: int = ...
     MC_NEWEST: int = ...
 
-class Dimension:
+class Dimension(IntEnum):
     """Minecraft dimensions"""
     NETHER: int = ...
     OVERWORLD: int = ...
     END: int = ...
 
-class Flag:
+class Flag(IntEnum):
     """Generator flags"""
     LARGE_BIOMES: int = ...
     NO_BETA_OCEAN: int = ...
     FORCE_OCEAN_VARIANTS: int = ...
 
-class Biome:
+class Biome(IntEnum):
     """Biome IDs"""
     ocean: int = ...
     plains: int = ...
@@ -214,7 +215,7 @@ class Generator:
         """
         ...
 
-    def get_biome_at(self, scale: int, x: int, y: int, z: int) -> int:
+    def get_biome_at(self, scale: int, x: int, y: int, z: int) -> Biome:
         """
         Get the biome ID at a specific coordinate and scale.
 
@@ -229,7 +230,7 @@ class Generator:
         """
         ...
 
-    def gen_biomes(self, scale: int, x: int, z: int, sx: int, sz: int, y: int = 0, sy: int = 1) -> List[int]:
+    def gen_biomes(self, scale: int, x: int, z: int, sx: int, sz: int, y: int = 0, sy: int = 1) -> List[Biome]:
         """
         Generate biomes for a given range.
 
